@@ -1,6 +1,6 @@
 use crate::LinkedList::{Cons, Nil};
+use rand;
 use std::fmt::Formatter;
-use std::mem::forget;
 use std::{fmt, mem};
 
 // Debug позволяет выводить структуру в print добавляя код для вывода через impl
@@ -257,5 +257,15 @@ fn main() {
         .chars()
         .position(|x| "!.`;*,?/\\".chars().all(|char| -> bool { char == x }));
     println!("Cleaned string: {}", output_string);
+    println!("################################################");
+    let mut password: Vec<String> = (0..50)
+        .map(|_| -> String {
+            let char = ('A'..'z')
+                .nth(rand::random::<usize>() % ('A'..'z').count())
+                .unwrap_or('0');
+            char.to_string()
+        })
+        .collect();
+    println!("New password is {}", password.concat());
     println!("################################################");
 }
