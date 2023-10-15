@@ -1,5 +1,6 @@
 use crate::LinkedList::{Cons, Nil};
-use std::fmt::{format, Formatter};
+use std::fmt::Formatter;
+use std::mem::forget;
 use std::{fmt, mem};
 
 // Debug позволяет выводить структуру в print добавляя код для вывода через impl
@@ -147,6 +148,15 @@ enum FooBar {
     FooBar(u8),
 }
 
+fn test<T: Fn(&str)>(t: T, data: &str) {
+    let modified = data.to_string() + "!!!";
+    t(modified.as_str());
+}
+
+fn test2(data: &str) {
+    println!("{}", data)
+}
+
 fn main() {
     println!("################################################");
     println!("{:?}", TEST(10, 20));
@@ -217,8 +227,8 @@ fn main() {
     println!("################################################");
     println!("{}", 78.42_f32 as u8 as char);
     println!("################################################");
-    let testString = "013411".parse::<u32>().unwrap_or(0u32);
-    println!("{}", testString);
+    let test_string = "013411".parse::<u32>().unwrap_or(0u32);
+    println!("{}", test_string);
     println!("################################################");
     let message: &str = 'neko0: loop {
         println!("Anime is aesthetic");
@@ -233,5 +243,19 @@ fn main() {
     if let FooBar::FooBar(test @ 1..=10) = c {
         println!("TEST {}", test);
     }
+    println!("################################################");
+    let test_func = |message: &str| println!("{}", message);
+    test(test_func, "Nyaaaa");
+    test(test2, "Desu");
+    println!("################################################");
+    let injected_string: String = "\\some` variable,` will be. nested! ; Neko ni?".to_string();
+    let output_string: String = injected_string
+        .chars()
+        .filter(|&x| "!.`;*,?/\\".chars().all(|char| -> bool { char != x }))
+        .collect();
+    let injected_indexes = injected_string
+        .chars()
+        .position(|x| "!.`;*,?/\\".chars().all(|char| -> bool { char == x }));
+    println!("Cleaned string: {}", output_string);
     println!("################################################");
 }
