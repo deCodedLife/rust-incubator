@@ -173,8 +173,12 @@ struct Regular {
 trait User {
     fn new(name: &'static str) -> Self;
     fn get_name(&self) -> &'static str;
-    fn message_to(&self, recipient: &str) {
-        println!("User [{}] send a message to {}", self.get_name(), recipient);
+    fn message_to<T: User>(&self, recipient: &T) {
+        println!(
+            "User [{}] send a message to {}",
+            self.get_name(),
+            recipient.get_name()
+        );
     }
 }
 
@@ -186,11 +190,11 @@ impl User for Admin {
         self.name
     }
 
-    fn message_to(&self, recipient: &str) {
+    fn message_to<T: User>(&self, recipient: &T) {
         println!(
             "Admin ~[{}]~ send a message to {}",
             self.get_name(),
-            recipient
+            recipient.get_name()
         )
     }
 }
@@ -319,8 +323,8 @@ fn main() {
     println!("################################################");
     let regular_user = Regular::new("tester");
     let admin_user = Admin::new("Root");
-    regular_user.message_to(admin_user.get_name());
-    admin_user.message_to(regular_user.get_name());
+    regular_user.message_to(&admin_user);
+    admin_user.message_to(&regular_user);
     println!("################################################");
     debugger(&admin_user);
     debugger(&regular_user);
