@@ -1,0 +1,8 @@
+[package]
+name  = "testlib"
+version = "0.0.1"
+authors = ["codedlife"]
+
+[lib]
+name = "testlib"
+path = "test.rs"

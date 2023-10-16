@@ -3,6 +3,12 @@ use rand;
 use std::fmt::Formatter;
 use std::{fmt, mem};
 
+#[cfg(test)]
+#[path = "tests/tests.rs"]
+mod tests;
+
+extern crate testlib;
+
 // Debug позволяет выводить структуру в print добавляя код для вывода через impl
 #[derive(Debug)]
 struct TEST(i64, i64);
@@ -103,7 +109,6 @@ impl OperationStatus {
 
 enum Colored {
     Red = 0xff0000,
-    Green = 0x00ff00,
     Blue = 0x0000ff,
 }
 
@@ -143,8 +148,6 @@ impl LinkedList {
 static mut LULZ: &str = "Lulz";
 
 enum FooBar {
-    Foo,
-    Bar,
     FooBar(u8),
 }
 
@@ -155,6 +158,47 @@ fn test<T: Fn(&str)>(t: T, data: &str) {
 
 fn test2(data: &str) {
     println!("{}", data)
+}
+
+struct Admin {
+    name: &'static str,
+}
+struct Regular {
+    name: &'static str,
+}
+
+trait User {
+    fn new(name: &'static str) -> Self;
+    fn get_name(&self) -> &'static str;
+    fn message_to(&self, recipient: &str) {
+        println!("User [{}] send a message to {}", self.get_name(), recipient);
+    }
+}
+
+impl User for Admin {
+    fn new(username: &'static str) -> Admin {
+        Admin { name: username }
+    }
+    fn get_name(&self) -> &'static str {
+        self.name
+    }
+
+    fn message_to(&self, recipient: &str) {
+        println!(
+            "Admin ~[{}]~ send a message to {}",
+            self.get_name(),
+            recipient
+        )
+    }
+}
+
+impl User for Regular {
+    fn new(username: &'static str) -> Regular {
+        Regular { name: username }
+    }
+    fn get_name(&self) -> &'static str {
+        self.name
+    }
 }
 
 fn main() {
@@ -232,7 +276,7 @@ fn main() {
     println!("################################################");
     let message: &str = 'neko0: loop {
         println!("Anime is aesthetic");
-        'neko: loop {
+        loop {
             println!("But it's better if you had a person which you love");
             break 'neko0 "Sometimes you need that One Desire";
         }
@@ -253,19 +297,23 @@ fn main() {
         .chars()
         .filter(|&x| "!.`;*,?/\\".chars().all(|char| -> bool { char != x }))
         .collect();
-    let injected_indexes = injected_string
-        .chars()
-        .position(|x| "!.`;*,?/\\".chars().all(|char| -> bool { char == x }));
     println!("Cleaned string: {}", output_string);
     println!("################################################");
-    let mut password: Vec<String> = (0..50)
-        .map(|_| -> String {
-            let char = ('A'..'z')
-                .nth(rand::random::<usize>() % ('A'..'z').count())
-                .unwrap_or('0');
-            char.to_string()
-        })
-        .collect();
+    let generator_func = |_t| -> String {
+        let char = ('A'..'z')
+            .nth(rand::random::<usize>() % ('A'..'z').count())
+            .unwrap_or('0');
+        char.to_string()
+    };
+    let password: Vec<String> = (0..50).map(generator_func).collect();
     println!("New password is {}", password.concat());
+    println!("################################################");
+    testlib::test_func();
+    println!("################################################");
+    let regular_user = Regular::new("tester");
+    let admin_user = Admin::new("Root");
+
+    regular_user.message_to(admin_user.get_name());
+    admin_user.message_to(regular_user.get_name());
     println!("################################################");
 }
