@@ -1,6 +1,7 @@
 use crate::LinkedList::{Cons, Nil};
 use rand;
 use std::fmt::{Debug, Formatter};
+use std::marker::PhantomData;
 use std::{fmt, mem};
 
 #[cfg(test)]
@@ -161,13 +162,15 @@ fn test2(data: &str) {
 }
 
 #[derive(Debug)]
-struct Admin {
-    name: &'static str,
-}
+enum Admin {}
 
 #[derive(Debug)]
-struct Regular {
+enum Regular {}
+
+#[derive(Debug)]
+struct UserData<Type> {
     name: &'static str,
+    data: PhantomData<Type>,
 }
 
 trait User {
@@ -182,29 +185,25 @@ trait User {
     }
 }
 
-impl User for Admin {
-    fn new(username: &'static str) -> Admin {
-        Admin { name: username }
+impl<Type> User for UserData<Type> {
+    fn new(username: &'static str) -> UserData<Type> {
+        UserData {
+            name: username,
+            data: PhantomData,
+        }
     }
     fn get_name(&self) -> &'static str {
         self.name
-    }
-
-    fn message_to<T: User>(&self, recipient: &T) {
-        println!(
-            "Admin ~[{}]~ send a message to {}",
-            self.get_name(),
-            recipient.get_name()
-        )
     }
 }
 
-impl User for Regular {
-    fn new(username: &'static str) -> Regular {
-        Regular { name: username }
-    }
-    fn get_name(&self) -> &'static str {
-        self.name
+impl UserData<Admin> {
+    fn message_to<T: User>(&self, recipient: &T) {
+        println!(
+            "ADMIN ~[{}]~ send a message to {}",
+            self.get_name(),
+            recipient.get_name()
+        );
     }
 }
 
@@ -321,8 +320,8 @@ fn main() {
     println!("################################################");
     testlib::test_func();
     println!("################################################");
-    let regular_user = Regular::new("tester");
-    let admin_user = Admin::new("Root");
+    let regular_user: UserData<Regular> = UserData::new("test");
+    let admin_user: UserData<Admin> = UserData::new("Root");
     regular_user.message_to(&admin_user);
     admin_user.message_to(&regular_user);
     println!("################################################");
