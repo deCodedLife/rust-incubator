@@ -1,6 +1,6 @@
 use crate::LinkedList::{Cons, Nil};
 use rand;
-use std::fmt::Formatter;
+use std::fmt::{Debug, Formatter};
 use std::{fmt, mem};
 
 #[cfg(test)]
@@ -160,9 +160,12 @@ fn test2(data: &str) {
     println!("{}", data)
 }
 
+#[derive(Debug)]
 struct Admin {
     name: &'static str,
 }
+
+#[derive(Debug)]
 struct Regular {
     name: &'static str,
 }
@@ -199,6 +202,10 @@ impl User for Regular {
     fn get_name(&self) -> &'static str {
         self.name
     }
+}
+
+fn debugger<T: Debug>(obj: &T) {
+    println!("{:?}", obj)
 }
 
 fn main() {
@@ -312,8 +319,10 @@ fn main() {
     println!("################################################");
     let regular_user = Regular::new("tester");
     let admin_user = Admin::new("Root");
-
     regular_user.message_to(admin_user.get_name());
     admin_user.message_to(regular_user.get_name());
+    println!("################################################");
+    debugger(&admin_user);
+    debugger(&regular_user);
     println!("################################################");
 }
