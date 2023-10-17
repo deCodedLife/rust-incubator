@@ -185,6 +185,12 @@ trait User {
     }
 }
 
+impl<Type> Drop for UserData<Type> {
+    fn drop(&mut self) {
+        println!("User {} destroyed", self.name)
+    }
+}
+
 impl<Type> User for UserData<Type> {
     fn new(username: &'static str) -> UserData<Type> {
         UserData {
@@ -327,5 +333,10 @@ fn main() {
     println!("################################################");
     debugger(&admin_user);
     debugger(&regular_user);
+    println!("################################################");
+    let test_a = Box::new(30i8);
+    let mut test_b = *test_a;
+    test_b = 42i8;
+    println!("{}, {}", test_a, &test_b);
     println!("################################################");
 }
