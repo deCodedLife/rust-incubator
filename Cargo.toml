@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "0_basics/src/lib",
     "0_basics",
     "1_concepts",
     "1_concepts/1_*",

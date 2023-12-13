@@ -297,6 +297,7 @@ fn main() {
             break 'neko0 "Sometimes you need that One Desire";
         }
     };
+    println!("Test subject");
     println!("{}\nhttps://www.youtube.com/watch?v=prEQUMn-lJ8", message);
     println!("################################################");
     let c = FooBar::FooBar(7);
@@ -334,9 +335,6 @@ fn main() {
     debugger(&admin_user);
     debugger(&regular_user);
     println!("################################################");
-    let test_a = Box::new(30i8);
-    let mut test_b = *test_a;
-    test_b = 42i8;
-    println!("{}, {}", test_a, &test_b);
+    println!("Seems I'm back");
     println!("################################################");
 }

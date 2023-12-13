@@ -1,6 +1,8 @@
 #![crate_type = "lib"]
 #![crate_name = "testlib"]
 
+mod neko;
+
 pub fn test_func() -> String {
     internal();
     "Hello world from library".to_string()
@@ -11,6 +13,7 @@ pub fn add_numbers(a: i8, b: i8) -> i16 {
 }
 
 fn internal() {
+    neko::neko();
     println!("to do")
 }
 

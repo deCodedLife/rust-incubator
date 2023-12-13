@@ -7,6 +7,7 @@ name = "basics"
 version = "0.1.0"
 dependencies = [
  "rand",
+ "testlib",
 ]
 
 [[package]]
@@ -199,6 +200,10 @@ version = "0.1.0"
 [[package]]
 name = "step_4_3"
 version = "0.1.0"
+
+[[package]]
+name = "testlib"
+version = "0.0.1"
 
 [[package]]
 name = "wasi"
